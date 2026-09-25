@@ -70,3 +70,11 @@ Testing/
 
 # vs code folder
 .vscode/
+
+# meson wraps
+subprojects/*
+!subprojects/*.wrap
+!subprojects/packagefiles
+
+# imgui file
+imgui.ini
