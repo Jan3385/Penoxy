@@ -1,5 +1,8 @@
 #pragma once
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "rendering/IRenderer.h"
 
 namespace Render {
