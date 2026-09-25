@@ -1,9 +1,5 @@
 #include "Engine.h"
 
-#include <iostream>
-
-#include "GLFW/glfw3.h"
-
 Engine *Engine::instance = nullptr;
 
 Engine::Engine() {

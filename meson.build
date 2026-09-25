@@ -31,4 +31,5 @@ executable(
   sources + glad_sources,
   include_directories: [inc, glad_inc],
   dependencies: [gl_dep, glfw_dep, imgui_dep],
+  cpp_pch: 'pch/pch.h',
 )

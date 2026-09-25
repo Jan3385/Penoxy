@@ -20,8 +20,6 @@
 #define LOG_IMPORTANT_COLOR_MSG "\033[97m"
 #define LOG_END_SEQUENCE        "\033[0m"
 
-#include <string>
-#include <vector>
 #include <chrono>
 #include <mutex>
 #include <fstream>
