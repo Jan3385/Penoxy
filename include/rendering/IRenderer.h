@@ -11,6 +11,7 @@ struct Vec2 {
 namespace Render {
   class IRenderer {
   public:
+    virtual ~IRenderer() { };
     virtual void Render() = 0;
     
     virtual bool ShouldClose() = 0;

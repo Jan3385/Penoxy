@@ -42,6 +42,7 @@ Render::GLRenderer::GLRenderer(WindowMode wm, Vec2 preferredWindowSize) {
   Debug::LogInfo(std::format("GLFW platform: {0}", glfwGetPlatform()));
 
   // Creating the window
+  Debug::LogTrace("Begining window creation");
   switch (wm) {
   case WindowMode::Windowed: {
     Debug::LogSpam("Windowed window");
@@ -94,6 +95,7 @@ Render::GLRenderer::GLRenderer(WindowMode wm, Vec2 preferredWindowSize) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   // ImGui setup
+  Debug::LogTrace("Setting up ImGui");
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -110,6 +112,8 @@ Render::GLRenderer::GLRenderer(WindowMode wm, Vec2 preferredWindowSize) {
 }
 
 Render::GLRenderer::~GLRenderer() {
+  Debug::LogTrace("OpenGL Renderer destructor triggered");
+
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
@@ -145,7 +149,10 @@ void Render::GLRenderer::Render() {
 }
 
 bool Render::GLRenderer::ShouldClose() {
-  if(!this->window) [[unlikely]] return true;
+  if(!this->window) [[unlikely]] {
+    Debug::LogWarn("OpenGL window has an empty pointer for some reason");
+    return true;
+  }
 
   return glfwWindowShouldClose(this->window);
 }

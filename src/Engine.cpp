@@ -7,6 +7,11 @@ Engine::Engine() {
 }
 
 Engine::~Engine() {
+	Debug::LogTrace("Engine destructor triggered");
+
+	delete this->renderer;
+	this->renderer = nullptr;
+
 	Engine::instance = nullptr;
 }
 
