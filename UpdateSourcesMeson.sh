@@ -1,3 +1,5 @@
+# Penoxy
+#
 # Copyright (C) 2026 Penoxy
 #
 # This program is free software: you can redistribute it and/or modify
@@ -30,10 +32,10 @@ SOURCES_ARRAY=(${SOURCES//;/ })
 
 echo "Found ${#SOURCES_ARRAY[@]} source files in src/"
 
-# add single quotes for each file
-for i in "${SOURCES_ARRAY[@]}";
+# add single quotes and commas for each file
+for (( idx=0 ; idx < ${#SOURCES_ARRAY[@]} ; idx=$(( idx + 1 )) ));
 do
-	i="'${i}'"
+	SOURCES_ARRAY[idx]="'${SOURCES_ARRAY[idx]}',"
 done
 
 # find & replace it in $WORKING_FILE
@@ -92,9 +94,9 @@ SOURCE_INDEX=0
 # build string for sed command
 for source in ${SOURCES_ARRAY[@]}; do
 	if [[ $SOURCE_INDEX -ne $((${#SOURCES_ARRAY[@]} - 1)) ]]; then
-		SOURCES_STRING+="  $source\n"
+		SOURCES_STRING+="  ${source}\n"
 	else
-		SOURCES_STRING+="  $source"
+		SOURCES_STRING+="  ${source}"
 	fi
 
 	SOURCE_INDEX=$((SOURCE_INDEX + 1))
