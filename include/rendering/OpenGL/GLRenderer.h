@@ -43,7 +43,7 @@ static inline bool CheckGLErrors(){
 
 class GLRenderer : public Render::IRenderer {
 public:
-  GLRenderer(WindowMode wm, Vec2 preferredWindowSize);
+  GLRenderer(WindowMode wm, Vec2i preferredWindowSize);
   ~GLRenderer();
   void Render() override;
 

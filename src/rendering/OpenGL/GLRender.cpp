@@ -27,7 +27,7 @@
 #include "config.h"
 #include "Engine.h"
 
-Render::GLRenderer::GLRenderer(WindowMode wm, Vec2 preferredWindowSize) {
+Render::GLRenderer::GLRenderer(WindowMode wm, Vec2i preferredWindowSize) {
 
   Debug::LogInfo(std::format("Creating a window with w:{0} h:{1}", preferredWindowSize.x, preferredWindowSize.y));
   

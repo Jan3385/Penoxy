@@ -22,11 +22,17 @@
 #include <string>
 
 //TODO: move Vec2 definition
-struct Vec2 {
-  Vec2() : x(0), y(0) {};
-  Vec2(int x, int y) : x(x), y(y) {};
+struct Vec2i {
+  Vec2i() : x(0), y(0) {};
+  Vec2i(int x, int y) : x(x), y(y) {};
   int x;
   int y;
+};
+struct Vec2f {
+  Vec2f() : x(0), y(0) {};
+  Vec2f(float x, float y) : x(x), y(y) {};
+  float x;
+  float y;
 };
 
 namespace Render {
@@ -40,9 +46,12 @@ public:
   virtual ~IWindow() { };   
 
   virtual bool SetTitle(std::string &name) = 0;
+
+  virtual void SetMouseMovementCallback(void (*mMCallback)(Vec2f mousePos)) = 0;
   
-  virtual Vec2 GetViewport() { return this->viewport; };
+  virtual Vec2i GetViewport() { return this->viewport; };
 protected:
-  Vec2 viewport{0, 0};
+  void (*mouseMovementCallback)(Vec2f mousePos) = nullptr;
+  Vec2i viewport{0, 0};
 };
 };

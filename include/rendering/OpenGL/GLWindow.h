@@ -30,19 +30,23 @@ namespace Render {
 class GLWindow : public Render::IWindow{
 public:
   ~GLWindow();
-  GLWindow(WindowMode wm, Vec2 preferredWindowSize);
+  GLWindow(WindowMode wm, Vec2i preferredWindowSize);
 
   void MakeContext();
   void SwapBuffers();
 
   bool SetTitle(std::string &name) override;
 
+  void SetMouseMovementCallback(void (*mMCallback)(Vec2f mousePos)) override;
+
   bool ShouldClose();
 
   GLFWwindow* GetGLFWWindow() { return this->window; };
 
   static std::unordered_map<GLFWwindow*, GLWindow*> activeWindows;
-  void SetViewport(Vec2 wm);
+  void SetViewport(Vec2i wm);
+  void TriggerMouseMovementCallback(Vec2f pos) 
+    { if(this->mouseMovementCallback) this->mouseMovementCallback(pos); };
 protected:
   GLFWwindow *window = nullptr;
 private:

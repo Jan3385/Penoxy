@@ -20,11 +20,15 @@
 #include "rendering/OpenGL/GLWindow.h"
 #include "rendering/OpenGL/GLRenderer.h"
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 #include "Debug/Logger.h"
 
 std::unordered_map<GLFWwindow*, Render::GLWindow*> Render::GLWindow::activeWindows{};
 
-void Render::GLWindow::SetViewport(Vec2 wm) {
+void Render::GLWindow::SetViewport(Vec2i wm) {
   glViewport(0, 0, wm.x, wm.y);
   this->viewport = wm;  
 }
@@ -35,6 +39,16 @@ void UpdateViewport(GLFWwindow* window, int width, int height) {
   w->SetViewport({width, height});
 }
 
+void CursorPositionCallback(GLFWwindow *window, double xpos, double ypos)
+{
+  //ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
+
+  Render::GLWindow *w = Render::GLWindow::activeWindows[window];
+  Debug::Assert(w, "Window not found by GLFWwindow!");
+
+  w->TriggerMouseMovementCallback({(float)xpos, (float)ypos});
+}
+
 Render::GLWindow::~GLWindow() {
   if(this->window != nullptr) {
       GLWindow::activeWindows.erase(this->window);
@@ -43,7 +57,7 @@ Render::GLWindow::~GLWindow() {
   }
 }
 
-Render::GLWindow::GLWindow(WindowMode wm, Vec2 preferredWindowSize) {
+Render::GLWindow::GLWindow(WindowMode wm, Vec2i preferredWindowSize) {
   Debug::LogTrace("Begining window creation");
   switch (wm) {
   case WindowMode::Windowed: {
@@ -83,6 +97,7 @@ Render::GLWindow::GLWindow(WindowMode wm, Vec2 preferredWindowSize) {
 
   GLWindow::activeWindows[this->window] = this;
   glfwSetFramebufferSizeCallback(this->window, UpdateViewport);
+  glfwSetCursorPosCallback(this->window, CursorPositionCallback);
 
   Debug::Assert(this->window, "Window failed to create!");
 }
@@ -104,6 +119,11 @@ bool Render::GLWindow::SetTitle(std::string &name) {
   glfwSetWindowTitle(this->window, name.c_str());
 
   return !CheckGLErrors();
+}
+
+void Render::GLWindow::SetMouseMovementCallback(void(* mMCallback)(Vec2f mousePos))
+{
+  this->mouseMovementCallback = mMCallback;
 }
 
 bool Render::GLWindow::ShouldClose() {
