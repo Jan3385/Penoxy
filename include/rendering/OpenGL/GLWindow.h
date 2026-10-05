@@ -19,21 +19,30 @@
 
 #pragma once
 
+#include "rendering/IWindow.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "rendering/IRenderer.h"
-#include "rendering/OpenGL/GLWindow.h"
+#include <unordered_map>
 
 namespace Render {
-class GLRenderer : public Render::IRenderer {
+class GLWindow : public Render::IWindow{
 public:
-  GLRenderer(WindowMode wm, Vec2 preferredWindowSize);
-  ~GLRenderer();
-  void Render() override;
+  ~GLWindow();
+  GLWindow(WindowMode wm, Vec2 preferredWindowSize);
 
-  bool ShouldClose() override;
+  void MakeContext();
+  void SwapBuffers();
+
+  bool ShouldClose();
+
+  GLFWwindow* GetGLFWWindow() { return this->window; };
+
+  static std::unordered_map<GLFWwindow*, GLWindow*> activeWindows;
+  void SetViewport(Vec2 wm);
+protected:
+  GLFWwindow *window = nullptr;
 private:
-  GLWindow *window = nullptr;
 };
 };

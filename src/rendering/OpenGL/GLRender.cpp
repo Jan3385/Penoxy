@@ -28,12 +28,6 @@
 #include "debug/Logger.h"
 #include "Engine.h"
 
-void UpdateViewport(GLFWwindow* window [[maybe_unused]], int width, int height)
-{
-    glViewport(0, 0, width, height);
-    Engine::instance->renderer->SetViewportSize({width, height});
-}
-
 Render::GLRenderer::GLRenderer(WindowMode wm, Vec2 preferredWindowSize) {
 
   Debug::LogInfo(std::format("Creating a window with w:{0} h:{1}", preferredWindowSize.x, preferredWindowSize.y));
@@ -61,46 +55,7 @@ Render::GLRenderer::GLRenderer(WindowMode wm, Vec2 preferredWindowSize) {
   Debug::LogInfo(std::format("GLFW platform: {0}", glfwGetPlatform()));
 
   // Creating the window
-  Debug::LogTrace("Begining window creation");
-  switch (wm) {
-  case WindowMode::Windowed: {
-    Debug::LogSpam("Windowed window");
-    this->window = glfwCreateWindow(preferredWindowSize.x, preferredWindowSize.y, PROJECT_NAME, nullptr, nullptr);
-    this->SetViewportSize(preferredWindowSize);
-    break;
-  }
-  case WindowMode::Borderless:
-  case WindowMode::Fullscreen: {
-    Debug::LogSpam("Borderless or Fullscreen window");
-
-    GLFWmonitor *monitor = glfwGetPrimaryMonitor();
-    const GLFWvidmode *mode = glfwGetVideoMode(monitor);
-
-    Debug::Assert(monitor, "Failed to get primary monitor!");
-    Debug::Assert(mode, "Failed to get monitor video mode!");
-
-    GLFWmonitor *windowMonitor = wm == WindowMode::Windowed ? nullptr : monitor;
-
-    this->window = glfwCreateWindow(mode->width, mode->height, "Planet renderer", windowMonitor, nullptr);
-    this->SetViewportSize({mode->width, mode->height});
-
-    if (wm == WindowMode::Borderless) {
-      glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
-      glfwSetWindowPos(window, 0, 0); 
-    }
-    break;
-  }
-  default: {
-    Debug::LogFatal("Undefined Window Mode set!");
-    break;
-  }
-  }
-
-  Debug::Assert(this->window, "Window failed to create!");
-
-  // window setup
-  glfwMakeContextCurrent(this->window);
-  glfwSetFramebufferSizeCallback(this->window, UpdateViewport);
+  this->window = new GLWindow(wm, preferredWindowSize);
 
   // GLAD setup
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -120,7 +75,7 @@ Render::GLRenderer::GLRenderer(WindowMode wm, Vec2 preferredWindowSize) {
   ImGuiIO& io = ImGui::GetIO(); (void)io;
   ImGui::StyleColorsDark();
 
-  ImGui_ImplGlfw_InitForOpenGL(window, true);
+  ImGui_ImplGlfw_InitForOpenGL(window->GetGLFWWindow(), true);
   ImGui_ImplOpenGL3_Init(OPENGL_VERSION);
 
 
@@ -137,15 +92,20 @@ Render::GLRenderer::~GLRenderer() {
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
 
-  if(this->window != nullptr) {
-      glfwDestroyWindow(this->window);
-      this->window = nullptr;
-  }
+  delete this->window;
 }
 
 void Render::GLRenderer::Render() {
+  if(!window){
+    Debug::LogSpam("Empty window for GL rendering!");
+    return;
+  }
+
   // skip rendering on minimised window
-  if(this->windowSize.x == 0 || this->windowSize.y == 0) return;
+  if(window->GetView().x == 0 || window->GetView().y == 0) {
+    Debug::LogSpam("Window size at (0, 0)");
+    return;
+  }
 
   // solid screen color
   glClearColor(0.2f, 0.2f, 0.8f, 1.0f);
@@ -164,19 +124,9 @@ void Render::GLRenderer::Render() {
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-  glfwSwapBuffers(window);
+  window->SwapBuffers();
 }
 
 bool Render::GLRenderer::ShouldClose() {
-  if(!this->window) [[unlikely]] {
-    Debug::LogWarn("OpenGL window has an empty pointer for some reason");
-    return true;
-  }
-
-  return glfwWindowShouldClose(this->window);
-}
-
-void Render::GLRenderer::SetViewportSize(Vec2 size) {
-  this->windowSize.x = size.x;
-  this->windowSize.y = size.y;
+  return window->ShouldClose();
 }

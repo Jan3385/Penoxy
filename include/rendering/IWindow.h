@@ -19,21 +19,26 @@
 
 #pragma once
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-#include "rendering/IRenderer.h"
-#include "rendering/OpenGL/GLWindow.h"
+//TODO: move Vec2 definition
+struct Vec2 {
+  Vec2() : x(0), y(0) {};
+  Vec2(int x, int y) : x(x), y(y) {};
+  int x;
+  int y;
+};
 
 namespace Render {
-class GLRenderer : public Render::IRenderer {
+enum class WindowMode {
+  Windowed,
+  Borderless,
+  Fullscreen,
+};
+class IWindow {
 public:
-  GLRenderer(WindowMode wm, Vec2 preferredWindowSize);
-  ~GLRenderer();
-  void Render() override;
-
-  bool ShouldClose() override;
-private:
-  GLWindow *window = nullptr;
+  virtual ~IWindow() { };   
+  
+  virtual Vec2 GetView() { return this->view; };
+protected:
+  Vec2 view{0, 0};
 };
 };

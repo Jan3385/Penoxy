@@ -13,6 +13,7 @@ sources = files(
   'src/debug/Logger.cpp',
   'src/main.cpp',
   'src/rendering/OpenGL/GLRender.cpp',
+  'src/rendering/OpenGL/GLWindow.cpp',
 )
 
 gl_dep = dependency('gl')
