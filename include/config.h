@@ -19,7 +19,7 @@
 
 #pragma once
 
-#define PROJECT_NAME "Peroxy"
+#define PROJECT_NAME "Penoxy"
 
 // Format "#version XXX"
 #define OPENGL_VERSION "#version 460"
