@@ -26,7 +26,7 @@ std::unordered_map<GLFWwindow*, Render::GLWindow*> Render::GLWindow::activeWindo
 
 void Render::GLWindow::SetViewport(Vec2 wm) {
   glViewport(0, 0, wm.x, wm.y);
-  this->view = wm;  
+  this->viewport = wm;  
 }
 
 void UpdateViewport(GLFWwindow* window, int width, int height) {
@@ -50,7 +50,7 @@ Render::GLWindow::GLWindow(WindowMode wm, Vec2 preferredWindowSize) {
     Debug::LogSpam("Windowed window");
     this->window = glfwCreateWindow(preferredWindowSize.x, preferredWindowSize.y, PROJECT_NAME, nullptr, nullptr);
     this->MakeContext();
-    this->view = preferredWindowSize;
+    this->viewport = preferredWindowSize;
     break;
   }
   case WindowMode::Borderless:
@@ -67,7 +67,7 @@ Render::GLWindow::GLWindow(WindowMode wm, Vec2 preferredWindowSize) {
 
     this->window = glfwCreateWindow(mode->width, mode->height, PROJECT_NAME, windowMonitor, nullptr);
 
-    this->view = preferredWindowSize;
+    this->viewport = preferredWindowSize;
 
     if (wm == WindowMode::Borderless) {
       glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);

@@ -24,6 +24,7 @@
 
 #include "rendering/IRenderer.h"
 #include "rendering/OpenGL/GLWindow.h"
+#include "debug/Logger.h"
 
 namespace Render {
 /// @brief Checks and prints any GL errors present

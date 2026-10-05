@@ -41,8 +41,8 @@ public:
 
   virtual bool SetTitle(std::string &name) = 0;
   
-  virtual Vec2 GetView() { return this->view; };
+  virtual Vec2 GetViewport() { return this->viewport; };
 protected:
-  Vec2 view{0, 0};
+  Vec2 viewport{0, 0};
 };
 };

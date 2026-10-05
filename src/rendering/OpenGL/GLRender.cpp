@@ -25,7 +25,6 @@
 #include <format>
 
 #include "config.h"
-#include "debug/Logger.h"
 #include "Engine.h"
 
 Render::GLRenderer::GLRenderer(WindowMode wm, Vec2 preferredWindowSize) {
@@ -99,7 +98,7 @@ void Render::GLRenderer::Render() {
   }
 
   // skip rendering on minimised window
-  if(window->GetView().x == 0 || window->GetView().y == 0) {
+  if(window->GetViewport().x == 0 || window->GetViewport().y == 0) {
     Debug::LogSpam("Window size at (0, 0)");
     return;
   }
