@@ -26,6 +26,20 @@
 #include "rendering/OpenGL/GLWindow.h"
 
 namespace Render {
+/// @brief Checks and prints any GL errors present
+/// @return `false` if no errors found; `true` if any errors are present during calling
+static inline bool CheckGLErrors(){
+  bool errFound = false;
+
+  GLenum err;
+  while ((err = glGetError()) != GL_NO_ERROR) {
+      errFound = true;
+      Debug::LogError("OpenGL error during renderer initialization: " + std::to_string(err));
+  }
+
+  return errFound;
+}
+
 class GLRenderer : public Render::IRenderer {
 public:
   GLRenderer(WindowMode wm, Vec2 preferredWindowSize);

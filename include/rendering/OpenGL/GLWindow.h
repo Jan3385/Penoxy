@@ -35,6 +35,8 @@ public:
   void MakeContext();
   void SwapBuffers();
 
+  bool SetTitle(std::string &name) override;
+
   bool ShouldClose();
 
   GLFWwindow* GetGLFWWindow() { return this->window; };

@@ -79,10 +79,7 @@ Render::GLRenderer::GLRenderer(WindowMode wm, Vec2 preferredWindowSize) {
   ImGui_ImplOpenGL3_Init(OPENGL_VERSION);
 
 
-  GLenum err;
-  while ((err = glGetError()) != GL_NO_ERROR) {
-      Debug::LogError("OpenGL error during renderer initialization: " + std::to_string(err));
-  }
+  CheckGLErrors();
 }
 
 Render::GLRenderer::~GLRenderer() {

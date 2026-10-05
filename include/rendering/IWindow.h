@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <string>
+
 //TODO: move Vec2 definition
 struct Vec2 {
   Vec2() : x(0), y(0) {};
@@ -36,6 +38,8 @@ enum class WindowMode {
 class IWindow {
 public:
   virtual ~IWindow() { };   
+
+  virtual bool SetTitle(std::string &name) = 0;
   
   virtual Vec2 GetView() { return this->view; };
 protected:

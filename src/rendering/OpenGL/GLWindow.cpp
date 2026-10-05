@@ -18,6 +18,7 @@
  */
 
 #include "rendering/OpenGL/GLWindow.h"
+#include "rendering/OpenGL/GLRenderer.h"
 
 #include "Debug/Logger.h"
 
@@ -92,6 +93,17 @@ void Render::GLWindow::MakeContext() {
 
 void Render::GLWindow::SwapBuffers() {
   glfwSwapBuffers(window);
+}
+
+bool Render::GLWindow::SetTitle(std::string &name) {
+  if (!this->window) [[unlikely]] {
+    Debug::LogWarn("Trying to set the name of invalid window");
+    return false;
+  }
+
+  glfwSetWindowTitle(this->window, name.c_str());
+
+  return !CheckGLErrors();
 }
 
 bool Render::GLWindow::ShouldClose() {
