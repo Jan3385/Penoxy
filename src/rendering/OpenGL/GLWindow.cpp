@@ -49,6 +49,29 @@ void CursorPositionCallback(GLFWwindow *window, double xpos, double ypos)
   w->TriggerMouseMovementCallback({(float)xpos, (float)ypos});
 }
 
+void Render::GLWindow::SetCursorMode(CursorMode mode)
+{
+  int glfwMode = 0;
+  switch (mode)
+  {
+  case CursorMode::Normal:
+    glfwMode = GLFW_CURSOR_NORMAL;
+    break;
+  case CursorMode::Hidden:
+    glfwMode = GLFW_CURSOR_HIDDEN;
+    break;
+  case CursorMode::Trapped:
+    glfwMode = GLFW_CURSOR_DISABLED;
+    break;
+  default:
+    Debug::LogWarn("Invalid cursor mode set!");
+    return;
+    break;
+  }
+
+  glfwSetInputMode(this->window, GLFW_CURSOR, glfwMode);
+}
+
 Render::GLWindow::~GLWindow() {
   if(this->window != nullptr) {
       GLWindow::activeWindows.erase(this->window);

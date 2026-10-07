@@ -41,11 +41,18 @@ enum class WindowMode {
   Borderless,
   Fullscreen,
 };
+enum class CursorMode{
+    Normal,
+    Hidden,
+    Trapped
+};
+
 class IWindow {
 public:
   virtual ~IWindow() { };   
 
   virtual bool SetTitle(std::string &name) = 0;
+  virtual void SetCursorMode(CursorMode mode) = 0;
 
   virtual void SetMouseMovementCallback(void (*mMCallback)(Vec2f mousePos)) = 0;
   

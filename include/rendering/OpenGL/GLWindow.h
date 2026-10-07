@@ -36,6 +36,7 @@ public:
   void SwapBuffers();
 
   bool SetTitle(std::string &name) override;
+  void SetCursorMode(CursorMode mode) override;
 
   void SetMouseMovementCallback(void (*mMCallback)(Vec2f mousePos)) override;
 
