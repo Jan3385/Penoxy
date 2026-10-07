@@ -48,6 +48,7 @@ public:
   void Render() override;
 
   IWindow* GetWindow() override;
+  void SetVSYNC(bool enable) override;
 
   bool ShouldClose() override;
 private:

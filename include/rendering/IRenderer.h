@@ -28,6 +28,8 @@ namespace Render {
     virtual void Render() = 0;
     
     virtual IWindow* GetWindow() = 0;
+    
+    virtual void SetVSYNC(bool enable) = 0;
 
     virtual bool ShouldClose() = 0;
   protected:

@@ -126,6 +126,12 @@ void Render::GLRenderer::Render() {
 Render::IWindow* Render::GLRenderer::GetWindow() {
   return this->window;
 }
+void Render::GLRenderer::SetVSYNC(bool enable)
+{
+    if(!enable) glfwSwapInterval(0);
+    else         glfwSwapInterval(1);
+}
+
 
 bool Render::GLRenderer::ShouldClose() {
   return window->ShouldClose();

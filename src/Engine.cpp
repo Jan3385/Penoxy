@@ -36,6 +36,7 @@ Engine::~Engine() {
 
 void Engine::Run(EngineConfig &config) {
 	this->renderer = new Render::GLRenderer(config.windowMode, {config.windowHeight, config.windowWidth});
+	this->renderer->SetVSYNC(true);
 
 	while (!this->renderer->ShouldClose()) {
 		// TODO: temporary for testing
