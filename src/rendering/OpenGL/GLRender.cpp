@@ -123,6 +123,10 @@ void Render::GLRenderer::Render() {
   window->SwapBuffers();
 }
 
+Render::IWindow* Render::GLRenderer::GetWindow() {
+  return this->window;
+}
+
 bool Render::GLRenderer::ShouldClose() {
   return window->ShouldClose();
 }

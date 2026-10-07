@@ -24,6 +24,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <queue>
 #include <unordered_map>
 
 namespace Render {
@@ -38,6 +39,8 @@ public:
   bool SetTitle(std::string &name) override;
   void SetCursorMode(CursorMode mode) override;
 
+  bool LoadCharFromQueue(char32_t *c) override;
+
   void SetMouseMovementCallback(void (*mMCallback)(Vec2f mousePos)) override;
 
   bool ShouldClose();
@@ -46,10 +49,13 @@ public:
 
   static std::unordered_map<GLFWwindow*, GLWindow*> activeWindows;
   void SetViewport(Vec2i wm);
+
   void TriggerMouseMovementCallback(Vec2f pos) 
     { if(this->mouseMovementCallback) this->mouseMovementCallback(pos); };
+  void PushUTF32CharToQueue(char32_t c) { UTF32CharQueue.push(c); };
 protected:
   GLFWwindow *window = nullptr;
 private:
+  std::queue<char32_t> UTF32CharQueue{};
 };
 };

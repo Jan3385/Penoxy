@@ -19,12 +19,16 @@
 
 #pragma once
 
+#include "rendering/IWindow.h"
+
 namespace Render {
   class IRenderer {
   public:
     virtual ~IRenderer() { };
     virtual void Render() = 0;
     
+    virtual IWindow* GetWindow() = 0;
+
     virtual bool ShouldClose() = 0;
   protected:
   };

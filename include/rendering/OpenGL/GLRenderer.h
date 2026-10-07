@@ -47,6 +47,8 @@ public:
   ~GLRenderer();
   void Render() override;
 
+  IWindow* GetWindow() override;
+
   bool ShouldClose() override;
 private:
   GLWindow *window = nullptr;

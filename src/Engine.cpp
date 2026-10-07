@@ -38,8 +38,19 @@ void Engine::Run(EngineConfig &config) {
 	this->renderer = new Render::GLRenderer(config.windowMode, {config.windowHeight, config.windowWidth});
 
 	while (!this->renderer->ShouldClose()) {
-		// TODO: temporary spot. move later
-		glfwPollEvents();
+		// TODO: temporary for testing
+		char32_t input;
+		Render::IWindow *w = this->renderer->GetWindow();
+		while (w->LoadCharFromQueue(&input)){
+			if(IsSpecialUTF32Char(input)) Debug::LogInfo("Special key pressed!");
+			else{
+				std::string msg{(char)input};
+				msg = "Logged input: " + msg;
+				Debug::LogInfo(msg);
+			}
+		}
+		// --------------
+		
 
 		this->renderer->Render();
 	}

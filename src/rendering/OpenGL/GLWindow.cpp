@@ -39,6 +39,39 @@ void UpdateViewport(GLFWwindow* window, int width, int height) {
   w->SetViewport({width, height});
 }
 
+void KeyboardInputCallback(GLFWwindow* window, int key, int scancode [[maybe_unused]], int action, int mods [[maybe_unused]]){
+  Render::GLWindow *w = Render::GLWindow::activeWindows[window];
+
+  if (action == GLFW_RELEASE) return;
+
+  switch (key)
+  {
+  case GLFW_KEY_BACKSPACE:  w->PushUTF32CharToQueue(UTF32_BACKSPACE); break;
+  case GLFW_KEY_TAB:        w->PushUTF32CharToQueue(UTF32_TAB);       break;
+  case GLFW_KEY_ENTER:      w->PushUTF32CharToQueue(UTF32_ENTER);     break;
+  case GLFW_KEY_ESCAPE:     w->PushUTF32CharToQueue(UTF32_ESCAPE);    break;
+  case GLFW_KEY_DELETE:     w->PushUTF32CharToQueue(UTF32_DELETE);    break;
+  case GLFW_KEY_LEFT:       w->PushUTF32CharToQueue(UTF32_LEFT);      break;
+  case GLFW_KEY_RIGHT:      w->PushUTF32CharToQueue(UTF32_RIGHT);     break;
+  case GLFW_KEY_UP:         w->PushUTF32CharToQueue(UTF32_UP);        break;
+  case GLFW_KEY_DOWN:       w->PushUTF32CharToQueue(UTF32_DOWN);      break;
+  case GLFW_KEY_HOME:       w->PushUTF32CharToQueue(UTF32_HOME);      break;
+  case GLFW_KEY_END:        w->PushUTF32CharToQueue(UTF32_END);       break;
+  case GLFW_KEY_PAGE_UP:    w->PushUTF32CharToQueue(UTF32_PAGE_UP);   break;
+  case GLFW_KEY_PAGE_DOWN:  w->PushUTF32CharToQueue(UTF32_PAGE_DOWN); break;
+  case GLFW_KEY_INSERT:     w->PushUTF32CharToQueue(UTF32_INSERT);    break;
+  
+  default:
+    break;
+  }
+}
+
+void KeyboardCharacterInputCallback(GLFWwindow* window, unsigned int codePoint){
+  Render::GLWindow *w = Render::GLWindow::activeWindows[window];
+
+  w->PushUTF32CharToQueue(static_cast<char32_t>(codePoint));
+}
+
 void CursorPositionCallback(GLFWwindow *window, double xpos, double ypos)
 {
   //ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
@@ -70,6 +103,22 @@ void Render::GLWindow::SetCursorMode(CursorMode mode)
   }
 
   glfwSetInputMode(this->window, GLFW_CURSOR, glfwMode);
+}
+
+bool Render::GLWindow::LoadCharFromQueue(char32_t *c){
+  if (!c) { // Clear queue
+    this->UTF32CharQueue = std::queue<char32_t>();
+    return false;
+  }
+
+  if (this->UTF32CharQueue.size() == 0){ // End Of Queue
+    *c = 0x0000;
+    return false;
+  }
+
+  *c = this->UTF32CharQueue.front();
+  this->UTF32CharQueue.pop();
+  return true;
 }
 
 Render::GLWindow::~GLWindow() {
@@ -120,6 +169,8 @@ Render::GLWindow::GLWindow(WindowMode wm, Vec2i preferredWindowSize) {
 
   GLWindow::activeWindows[this->window] = this;
   glfwSetFramebufferSizeCallback(this->window, UpdateViewport);
+  glfwSetCharCallback(this->window, KeyboardCharacterInputCallback);
+  glfwSetKeyCallback(this->window, KeyboardInputCallback);
   glfwSetCursorPosCallback(this->window, CursorPositionCallback);
 
   Debug::Assert(this->window, "Window failed to create!");
@@ -130,6 +181,11 @@ void Render::GLWindow::MakeContext() {
 }
 
 void Render::GLWindow::SwapBuffers() {
+  // Clear input queue if not used
+  this->LoadCharFromQueue(nullptr);
+
+  glfwPollEvents();
+
   glfwSwapBuffers(window);
 }
 
