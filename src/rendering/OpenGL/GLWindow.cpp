@@ -96,25 +96,39 @@ void CursorPositionCallback(GLFWwindow *window, double xpos, double ypos)
 
 void Render::GLWindow::SetCursorMode(CursorMode mode)
 {
-  int glfwMode = 0;
   switch (mode)
   {
-  case CursorMode::Normal:
-    glfwMode = GLFW_CURSOR_NORMAL;
+  case CursorMode::Normal:  glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);    break;
+  case CursorMode::Hidden:  glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);    break;
+  case CursorMode::Trapped: glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  break;
+  default:
+    Debug::LogWarn("Invalid cursor mode set!");
+    return;
     break;
-  case CursorMode::Hidden:
-    glfwMode = GLFW_CURSOR_HIDDEN;
-    break;
-  case CursorMode::Trapped:
-    glfwMode = GLFW_CURSOR_DISABLED;
-    break;
+  }
+}
+
+void Render::GLWindow::SetCursorShape(CursorShape shape) {
+  uint32_t GLFWShape = GLFW_ARROW_CURSOR;
+  switch (shape)
+  {
+  case CursorShape::Normal:           GLFWShape = GLFW_ARROW_CURSOR;      break;
+  case CursorShape::Beam:             GLFWShape = GLFW_IBEAM_CURSOR;      break;
+  case CursorShape::Crosshair:        GLFWShape = GLFW_CROSSHAIR_CURSOR;  break;
+  case CursorShape::Hand:             GLFWShape = GLFW_HAND_CURSOR;       break;
+  case CursorShape::HorizontalResize: GLFWShape = GLFW_HRESIZE_CURSOR;    break;
+  case CursorShape::VerticalResize:   GLFWShape = GLFW_VRESIZE_CURSOR;    break;
   default:
     Debug::LogWarn("Invalid cursor mode set!");
     return;
     break;
   }
 
-  glfwSetInputMode(this->window, GLFW_CURSOR, glfwMode);
+  if (this->cursor) glfwDestroyCursor(this->cursor);
+
+  this->cursor = glfwCreateStandardCursor(GLFWShape);
+
+  glfwSetCursor(this->window, this->cursor);
 }
 
 bool Render::GLWindow::LoadCharFromQueue(char32_t *c){

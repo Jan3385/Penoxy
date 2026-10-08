@@ -38,6 +38,7 @@ public:
 
   bool SetTitle(std::string &name) override;
   void SetCursorMode(CursorMode mode) override;
+  void SetCursorShape(CursorShape shape) override;
 
   bool LoadCharFromQueue(char32_t *c) override;
 
@@ -56,6 +57,7 @@ public:
 protected:
   GLFWwindow *window = nullptr;
 private:
+  GLFWcursor *cursor = nullptr;
   std::queue<char32_t> UTF32CharQueue{};
 };
 };

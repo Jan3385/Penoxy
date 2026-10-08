@@ -46,6 +46,14 @@ enum class CursorMode{
     Hidden,
     Trapped
 };
+enum class CursorShape{
+    Normal,
+    Beam,
+    Crosshair,
+    Hand,
+    HorizontalResize,
+    VerticalResize
+};
 
 #define UTF32_BACKSPACE 8
 #define UTF32_TAB       9
@@ -74,6 +82,7 @@ public:
 
   virtual bool SetTitle(std::string &name) = 0;
   virtual void SetCursorMode(CursorMode mode) = 0;
+  virtual void SetCursorShape(CursorShape shape) = 0;
 
   /// @brief Loads one char at a time from the internal window keyboard even queue in order
   /// @param c Output parameter. `0x0000` when end of queue. If `c` is nullptr entire queue gets cleared
