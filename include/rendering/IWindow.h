@@ -81,10 +81,14 @@ public:
   virtual ~IWindow() { };   
 
   virtual bool SetTitle(std::string &name) = 0;
+
+  /// @brief Sets cursor behaviour 
   virtual void SetCursorMode(CursorMode mode) = 0;
+
+  /// @brief Sets cursor visuals
   virtual void SetCursorShape(CursorShape shape) = 0;
 
-  /// @brief Loads one char at a time from the internal window keyboard even queue in order
+  /// @brief Loads one char at a time from the internal window keyboard event queue in order
   /// @param c Output parameter. `0x0000` when end of queue. If `c` is nullptr entire queue gets cleared
   /// @return `true` if loaded successfully, `false` if load failed or end of queue
   virtual bool LoadCharFromQueue(char32_t *c) = 0;
