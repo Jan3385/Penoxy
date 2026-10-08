@@ -39,7 +39,7 @@ void UpdateViewport(GLFWwindow* window, int width, int height) {
   w->SetViewport({width, height});
 }
 
-void KeyboardInputCallback(GLFWwindow* window, int key, int scancode [[maybe_unused]], int action, int mods [[maybe_unused]]){
+void KeyboardInputCallback(GLFWwindow* window, int key, int scancode [[maybe_unused]], int action, int mods){
   Render::GLWindow *w = Render::GLWindow::activeWindows[window];
 
   if (action == GLFW_RELEASE) return;
@@ -63,6 +63,18 @@ void KeyboardInputCallback(GLFWwindow* window, int key, int scancode [[maybe_unu
   
   default:
     break;
+  }
+
+  if (action == GLFW_PRESS && mods & GLFW_MOD_CONTROL){
+    switch (key)
+    {
+    case GLFW_KEY_C:  w->PushUTF32CharToQueue(UTF32_COPY);  break;
+    case GLFW_KEY_V:  w->PushUTF32CharToQueue(UTF32_PASTE); break;
+    case GLFW_KEY_X:  w->PushUTF32CharToQueue(UTF32_CUT);   break;
+    
+    default:
+      break;
+    }
   }
 }
 

@@ -61,6 +61,12 @@ enum class CursorMode{
 #define UTF32_PAGE_UP   0x110000 + 7
 #define UTF32_PAGE_DOWN 0x110000 + 8
 #define UTF32_INSERT    0x110000 + 9
+// Special character for ctrl+c
+#define UTF32_COPY      0x110000 + 10
+// Special character for ctrl+v
+#define UTF32_PASTE     0x110000 + 11
+// Special character for ctrl+x
+#define UTF32_CUT       0x110000 + 12
 
 class IWindow {
 public:
@@ -90,7 +96,7 @@ inline constexpr bool IsSpecialUTF32Char(char32_t c) {
   if (c == UTF32_ESCAPE)     return true; 
   if (c == UTF32_DELETE)     return true; 
 
-  if (c >= UTF32_LEFT && c <= UTF32_INSERT) return true;
+  if (c >= UTF32_LEFT && c <= UTF32_CUT) return true;
 
   return false;
 }
